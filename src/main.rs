@@ -41,4 +41,12 @@ fn main() {
     benchme("unsafe 32bit", count, || lib::recombine_plane_unsafe_32(&src, 360, &mut b, 368, 360, 288));
 
     cmp(&a, &b);
+
+    benchme("chunks", count, || lib::recombine_plane_chunks(&src, 360, &mut b, 368, 360, 288));
+
+    cmp(&a, &b);
+
+    benchme("chunks 32bit", count, || lib::recombine_plane_chunks_32(&src, 360, &mut b, 368, 360, 288));
+
+    cmp(&a, &b);
 }
