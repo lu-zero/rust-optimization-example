@@ -44,5 +44,8 @@ fn main() {
     benchme("zip", count, || lib::recombine_plane_zip(&src, 360, &mut b, 368, 360, 288));
     benchme("zip 32bit", count, || lib::recombine_plane_zip_32(&src, 360, &mut b, 368, 360, 288));
 
+    benchme("izip", count, || lib::recombine_plane_izip(&src, 360, &mut b, 368, 360, 288));
+    benchme("izip 32bit", count, || lib::recombine_plane_izip_32(&src, 360, &mut b, 368, 360, 288));
+
     cmp(&a, &b);
 }
