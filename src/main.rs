@@ -23,7 +23,7 @@ fn benchme<F>(name: &str, n: usize, mut f: F)
         f();
     }
     let end = PreciseTime::now();
-    println!("Runtime {} {}", name, start.to(end));
+    println!("Runtime {0: <15}  {1: <12}", name, start.to(end));
 }
 
 fn main() {
@@ -33,19 +33,12 @@ fn main() {
     let mut b = vec![0; 600 * 1024 * 8];
 
     benchme("reference", count, || lib::recombine_plane_reference(&src, 360, &mut a, 368, 360, 288));
+    benchme("reference 32bit", count, || lib::recombine_plane_reference_32(&src, 360, &mut b, 368, 360, 288));
+
     benchme("unsafe", count, || lib::recombine_plane_unsafe(&src, 360, &mut b, 368, 360, 288));
-
-    cmp(&a, &b);
-
-    benchme("reference 32bit", count, || lib::recombine_plane_reference_32(&src, 360, &mut a, 368, 360, 288));
     benchme("unsafe 32bit", count, || lib::recombine_plane_unsafe_32(&src, 360, &mut b, 368, 360, 288));
 
-    cmp(&a, &b);
-
     benchme("chunks", count, || lib::recombine_plane_chunks(&src, 360, &mut b, 368, 360, 288));
-
-    cmp(&a, &b);
-
     benchme("chunks 32bit", count, || lib::recombine_plane_chunks_32(&src, 360, &mut b, 368, 360, 288));
 
     cmp(&a, &b);
