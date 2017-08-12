@@ -1,11 +1,9 @@
 #[macro_use]
 extern crate itertools;
 extern crate time;
+extern crate lib;
 
 use time::PreciseTime;
-mod testcases;
-
-use testcases::*;
 
 fn cmp(a: &[u8], b: &[u8]) {
     let ia = a.iter();
@@ -34,8 +32,8 @@ fn main() {
     let mut a = vec![0; 600 * 1024 * 8];
     let mut b = vec![0; 600 * 1024 * 8];
 
-    benchme("reference", count, || recombine_plane_reference(&src, 360, &mut a, 368, 360, 288));
-    benchme("reference", count, || recombine_plane_reference(&src, 360, &mut b, 368, 360, 288));
+    benchme("reference", count, || lib::recombine_plane_reference(&src, 360, &mut a, 368, 360, 288));
+    benchme("unsafe", count, || lib::recombine_plane_unsafe(&src, 360, &mut b, 368, 360, 288));
 
     cmp(&a, &b);
 }
