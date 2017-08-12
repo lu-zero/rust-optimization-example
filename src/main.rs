@@ -36,4 +36,9 @@ fn main() {
     benchme("unsafe", count, || lib::recombine_plane_unsafe(&src, 360, &mut b, 368, 360, 288));
 
     cmp(&a, &b);
+
+    benchme("reference 32bit", count, || lib::recombine_plane_reference_32(&src, 360, &mut a, 368, 360, 288));
+    benchme("unsafe 32bit", count, || lib::recombine_plane_unsafe_32(&src, 360, &mut b, 368, 360, 288));
+
+    cmp(&a, &b);
 }
