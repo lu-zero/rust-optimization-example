@@ -1,11 +1,18 @@
-#[inline]
-pub fn clip8(a: i16) -> u8 {
-    if a < 0 {
-        0
-    } else if a > 255 {
-        255
-    } else {
-        a as u8
+
+trait Clip {
+    fn clip8(self) -> u8;
+}
+
+impl Clip for i16 {
+    #[inline]
+    fn clip8(self) -> u8 {
+        if self < 0 {
+            0
+        } else if self > 255 {
+            255
+        } else {
+            self as u8
+        }
     }
 }
 
@@ -38,10 +45,10 @@ pub fn recombine_plane_reference(
             let o1 = d0.wrapping_add(d1).wrapping_add(2);
             let o2 = s0.wrapping_sub(s1).wrapping_add(2);
             let o3 = d0.wrapping_sub(d1).wrapping_add(2);
-            dst[oidx0 + x * 2 + 0] = clip8(o0.wrapping_shr(2).wrapping_add(128));
-            dst[oidx0 + x * 2 + 1] = clip8(o1.wrapping_shr(2).wrapping_add(128));
-            dst[oidx1 + x * 2 + 0] = clip8(o2.wrapping_shr(2).wrapping_add(128));
-            dst[oidx1 + x * 2 + 1] = clip8(o3.wrapping_shr(2).wrapping_add(128));
+            dst[oidx0 + x * 2 + 0] = o0.wrapping_shr(2).wrapping_add(128).clip8();
+            dst[oidx0 + x * 2 + 1] = o1.wrapping_shr(2).wrapping_add(128).clip8();
+            dst[oidx1 + x * 2 + 0] = o2.wrapping_shr(2).wrapping_add(128).clip8();
+            dst[oidx1 + x * 2 + 1] = o3.wrapping_shr(2).wrapping_add(128).clip8();
         }
         idx0 += sstride;
         idx1 += sstride;
@@ -89,10 +96,10 @@ pub fn recombine_plane_unsafe(
                 let o1 = d0.wrapping_add(d1).wrapping_add(2);
                 let o2 = s0.wrapping_sub(s1).wrapping_add(2);
                 let o3 = d0.wrapping_sub(d1).wrapping_add(2);
-                *d0_ptr.offset(0) = clip8((o0 >> 2).wrapping_add(128));
-                *d0_ptr.offset(1) = clip8((o1 >> 2).wrapping_add(128));
-                *d1_ptr.offset(0) = clip8((o2 >> 2).wrapping_add(128));
-                *d1_ptr.offset(1) = clip8((o3 >> 2).wrapping_add(128));
+                *d0_ptr.offset(0) = (o0 >> 2).wrapping_add(128).clip8();
+                *d0_ptr.offset(1) = (o1 >> 2).wrapping_add(128).clip8();
+                *d1_ptr.offset(0) = (o2 >> 2).wrapping_add(128).clip8();
+                *d1_ptr.offset(1) = (o3 >> 2).wrapping_add(128).clip8();
                 b0_ptr = b0_ptr.offset(1);
                 b1_ptr = b1_ptr.offset(1);
                 b2_ptr = b2_ptr.offset(1);
