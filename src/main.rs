@@ -29,11 +29,13 @@ fn benchme<F>(name: &str, n: usize, mut f: F)
 }
 
 fn main() {
-    let count = 1;
-    let a = [0; 1];
-    let b = [0; 1];
+    let count = 10000;
+    let src = vec![42; 600 * 1024];
+    let mut a = vec![0; 600 * 1024 * 8];
+    let mut b = vec![0; 600 * 1024 * 8];
 
-    benchme("reference", count, || hello_world());
+    benchme("reference", count, || recombine_plane_reference(&src, 360, &mut a, 368, 360, 288));
+    benchme("reference", count, || recombine_plane_reference(&src, 360, &mut b, 368, 360, 288));
 
     cmp(&a, &b);
 }
