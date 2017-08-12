@@ -1,0 +1,8 @@
+[package]
+name = "rust-optimization-example"
+version = "0.1.0"
+authors = ["Luca Barbato <lu_zero@gentoo.org>"]
+
+[dependencies]
+itertools = "0.6.*"
+time = "0.1.*"
