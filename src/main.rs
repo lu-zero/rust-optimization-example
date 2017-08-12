@@ -41,5 +41,8 @@ fn main() {
     benchme("chunks", count, || lib::recombine_plane_chunks(&src, 360, &mut b, 368, 360, 288));
     benchme("chunks 32bit", count, || lib::recombine_plane_chunks_32(&src, 360, &mut b, 368, 360, 288));
 
+    benchme("zip", count, || lib::recombine_plane_zip(&src, 360, &mut b, 368, 360, 288));
+    benchme("zip 32bit", count, || lib::recombine_plane_zip_32(&src, 360, &mut b, 368, 360, 288));
+
     cmp(&a, &b);
 }

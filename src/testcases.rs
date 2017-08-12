@@ -346,3 +346,59 @@ pub fn recombine_plane_chunks_32(
         }
     }
 }
+
+pub fn recombine_plane_zip(
+    src: &[i16],
+    sstride: usize,
+    dst: &mut [u8],
+    dstride: usize,
+    w: usize,
+    h: usize,
+) {
+    let hw = w / 2;
+    let hh = h / 2;
+    let (src1, src2) = src.split_at(sstride * hh);
+    let src1i = src1.chunks(sstride);
+    let src2i = src2.chunks(sstride);
+    let mut dstch = dst.chunks_mut(dstride * 2);
+    for (s1, s2) in src1i.zip(src2i) {
+        let mut d = dstch.next().unwrap();
+        let (mut d0, mut d1) = d.split_at_mut(dstride);
+        let (b0, b1) = s1.split_at(hw);
+        let (b2, b3) = s2.split_at(hw);
+        let mut di0 = d0.iter_mut();
+        let mut di1 = d1.iter_mut();
+        let iterband = b0.iter().zip(b1.iter().zip(b2.iter().zip(b3.iter())));
+        for (p0, (p1, (p2, p3))) in iterband {
+            recombine_core_16(*p0, *p1, *p2, *p3, &mut di0, &mut di1);
+        }
+    }
+}
+
+pub fn recombine_plane_zip_32(
+    src: &[i16],
+    sstride: usize,
+    dst: &mut [u8],
+    dstride: usize,
+    w: usize,
+    h: usize,
+) {
+    let hw = w / 2;
+    let hh = h / 2;
+    let (src1, src2) = src.split_at(sstride * hh);
+    let src1i = src1.chunks(sstride);
+    let src2i = src2.chunks(sstride);
+    let mut dstch = dst.chunks_mut(dstride * 2);
+    for (s1, s2) in src1i.zip(src2i) {
+        let mut d = dstch.next().unwrap();
+        let (mut d0, mut d1) = d.split_at_mut(dstride);
+        let (b0, b1) = s1.split_at(hw);
+        let (b2, b3) = s2.split_at(hw);
+        let mut di0 = d0.iter_mut();
+        let mut di1 = d1.iter_mut();
+        let iterband = b0.iter().zip(b1.iter().zip(b2.iter().zip(b3.iter())));
+        for (p0, (p1, (p2, p3))) in iterband {
+            recombine_core_32(*p0, *p1, *p2, *p3, &mut di0, &mut di1);
+        }
+    }
+}
